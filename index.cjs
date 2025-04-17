@@ -61,7 +61,16 @@ app.use(cors());
 app.get("/api/countries", async (req, res) => {
   try {
     const response = await axios.get("https://api.travelpayouts.com/data/en/countries.json");
-    res.status(200).json(response.data);
+      const countries = response.data;
+  
+      const search = req.query.search?.toLowerCase();
+      const filtered = search
+        ? countries
+            .map(c => c.name)
+            .filter(name => name.toLowerCase().includes(search))
+        : countries.map(c => c.name);
+  
+      res.status(200).json(filtered);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
