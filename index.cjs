@@ -7,6 +7,7 @@ const dotenv = require("dotenv");
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+app.use(express.json());
 app.use(cors());
 
 app.get("/api/countries", async (req, res) => {
@@ -55,16 +56,17 @@ dotenv.config();
 app.use(express.json());
 app.use(cors());
 
+// ✅ Nodemailer transporter
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: process.env.EMAIL_USER, // Load from .env
-    pass: process.env.EMAIL_PASS, // Use App Password (Don't use raw password!)
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
   },
 });
 
+// ✅ Email route
 app.post("/send-email", async (req, res) => {
-  alert("we are here")
   const { to, subject, text } = req.body;
 
   const mailOptions = {
@@ -82,6 +84,7 @@ app.post("/send-email", async (req, res) => {
   }
 });
 
+// ✅ Test root route
 app.get("/", (req, res) => {
   res.send("🌍 API is working!");
 });
